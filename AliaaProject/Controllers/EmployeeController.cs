@@ -19,11 +19,28 @@ namespace AliaaProject.Controllers
         }
 
         // GET: Employee
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string Name)
         {
-            var mISMorakebContext = _context.Employees.Include(e => e.College).Include(e => e.Governorate).Include(e => e.Grade).Include(e => e.JobGroup).Include(e => e.MaritalStatus).Include(e => e.Qualification).Include(e => e.QualificationLevel).Include(e => e.QualitativeGroup).Include(e => e.University);
+            var mISMorakebContext = _context.Employees
+                .Include(e => e.College)
+                .Include(e => e.Governorate)
+                .Include(e => e.Grade)
+                .Include(e => e.JobGroup)
+                .Include(e => e.MaritalStatus)
+                .Include(e => e.Qualification)
+                .Include(e => e.QualificationLevel)
+                .Include(e => e.QualitativeGroup)
+                .Include(e => e.University)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(Name))
+            {
+                mISMorakebContext = mISMorakebContext.Where(x => x.Name.Contains(Name));
+            }
+
             return View(await mISMorakebContext.ToListAsync());
         }
+
 
         // GET: Employee/Details/5
         public async Task<IActionResult> Details(string id)
